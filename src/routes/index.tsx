@@ -78,7 +78,7 @@ function HomePage() {
             transition={{ duration: 0.6 }}
             className="flex items-center gap-2 text-xs uppercase tracking-widest opacity-80 mb-6"
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-accent" /> Ayuda · AI agent for Scaler sales
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" /> AI agent for Scaler sales
           </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
