@@ -56,11 +56,17 @@ export function PdfApprovalCard({
       <div className="bg-gradient-to-br from-primary to-primary/80 p-5 text-primary-foreground">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-widest text-accent font-semibold">Lead-facing PDF · approval required</p>
+            <p className="text-xs uppercase tracking-widest text-accent font-semibold">
+              Lead-facing PDF · approval required
+            </p>
             <h3 className="font-display text-2xl mt-1">{content.cover_title}</h3>
             <p className="text-sm opacity-80 mt-1">{content.cover_subtitle}</p>
           </div>
-          {approved && <span className="inline-flex items-center gap-1 text-xs bg-accent text-accent-foreground px-2 py-1 rounded-full"><Check className="h-3 w-3" /> Approved</span>}
+          {approved && (
+            <span className="inline-flex items-center gap-1 text-xs bg-accent text-accent-foreground px-2 py-1 rounded-full">
+              <Check className="h-3 w-3" /> Approved
+            </span>
+          )}
         </div>
       </div>
 
@@ -105,18 +111,27 @@ export function PdfApprovalCard({
                 className="mt-1.5"
               />
             </div>
-            <Button variant="secondary" size="sm" onClick={() => setEditing(false)}>Done editing</Button>
+            <Button variant="secondary" size="sm" onClick={() => setEditing(false)}>
+              Done editing
+            </Button>
           </div>
         ) : (
           <div className="border-t border-border pt-4">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold mb-1.5">WhatsApp cover message</p>
-            <p className="text-sm rounded-lg bg-muted p-3 italic">"{content.whatsapp_cover_message}"</p>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold mb-1.5">
+              WhatsApp cover message
+            </p>
+            <p className="text-sm rounded-lg bg-muted p-3 italic">
+              "{content.whatsapp_cover_message}"
+            </p>
           </div>
         )}
 
         <div className="flex flex-wrap gap-2 pt-2 border-t border-border">
           {!approved && (
-            <Button onClick={() => setApproved(true)} className="bg-accent text-accent-foreground hover:bg-accent/90">
+            <Button
+              onClick={() => setApproved(true)}
+              className="bg-accent text-accent-foreground hover:bg-accent/90"
+            >
               <Check className="h-4 w-4 mr-1.5" /> Approve
             </Button>
           )}
@@ -130,12 +145,20 @@ export function PdfApprovalCard({
             <Button variant="outline" onClick={downloadPdf}>
               <Download className="h-4 w-4 mr-1.5" /> Download
             </Button>
-            <Button disabled={!approved} onClick={sendOnWhatsApp} className="bg-primary text-primary-foreground hover:bg-primary/90">
+            <Button
+              disabled={!approved}
+              onClick={sendOnWhatsApp}
+              className="bg-primary text-primary-foreground hover:bg-primary/90"
+            >
               <Send className="h-4 w-4 mr-1.5" /> Send via WhatsApp
             </Button>
           </div>
         </div>
-        {!approved && <p className="text-xs text-muted-foreground">Approve before sending — nothing lead-facing fires automatically.</p>}
+        {!approved && (
+          <p className="text-xs text-muted-foreground">
+            Approve before sending — nothing lead-facing fires automatically.
+          </p>
+        )}
       </div>
     </div>
   );
@@ -154,7 +177,9 @@ function PdfDocumentPreview({ content, profile }: { content: PdfContent; profile
 
         <div className="space-y-6 px-8 py-7 text-sm leading-relaxed text-foreground">
           <p className="text-xs text-muted-foreground">
-            For: {profile.name}{profile.role ? ` — ${profile.role}` : ""}{profile.company ? ` @ ${profile.company}` : ""}
+            For: {profile.name}
+            {profile.role ? ` — ${profile.role}` : ""}
+            {profile.company ? ` @ ${profile.company}` : ""}
           </p>
 
           <p>{content.opening_note}</p>
@@ -164,9 +189,13 @@ function PdfDocumentPreview({ content, profile }: { content: PdfContent; profile
             <h5 className="font-display text-xl text-primary">Your questions, answered</h5>
             {content.questions_addressed.map((item, index) => (
               <article key={`${item.question}-${index}`} className="space-y-1.5">
-                <p className="font-semibold">{index + 1}. {item.question}</p>
+                <p className="font-semibold">
+                  {index + 1}. {item.question}
+                </p>
                 <p>{item.answer}</p>
-                <p className="text-xs text-muted-foreground">Why we're confident: {item.evidence}</p>
+                <p className="text-xs text-muted-foreground">
+                  Why we're confident: {item.evidence}
+                </p>
               </article>
             ))}
           </section>
@@ -190,7 +219,9 @@ function PdfDocumentPreview({ content, profile }: { content: PdfContent; profile
           </section>
 
           <section className="bg-primary p-4 text-primary-foreground">
-            <p className="text-xs font-semibold uppercase tracking-widest text-accent">Your next step</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-accent">
+              Your next step
+            </p>
             <p className="mt-2">{content.next_step}</p>
           </section>
         </div>
