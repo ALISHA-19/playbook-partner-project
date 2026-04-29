@@ -16,7 +16,7 @@ export const Route = createFileRoute("/")({
   component: HomePage,
   head: () => ({
     meta: [
-      { title: "Ayuda — AI sales agent for Scaler BDAs" },
+      { title: "Scaler Sales Agent — AI briefings & trust PDFs" },
       { name: "description", content: "Pre-call BDA briefings + post-call personalised PDFs, delivered on WhatsApp. Supercharging Scaler sales conversations." },
     ],
   }),
