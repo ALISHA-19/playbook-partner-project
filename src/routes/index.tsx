@@ -169,7 +169,7 @@ function HomePage() {
 
       <footer className="border-t border-border py-8">
         <div className="max-w-6xl mx-auto px-6 text-xs text-muted-foreground flex items-center justify-between flex-wrap gap-2">
-          <p>Ayuda · Built for the Scaler AI Builder take-home</p>
+          <p>Scaler Sales Agent · Built for the Scaler AI Builder take-home</p>
           <p className="flex items-center gap-1.5">Pre-sales nudge · Post-call trust PDF · Audio path · BDA approval gate <ArrowRight className="h-3 w-3" /></p>
         </div>
       </footer>
