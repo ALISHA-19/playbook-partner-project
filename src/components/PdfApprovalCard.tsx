@@ -26,7 +26,9 @@ export function PdfApprovalCard({
 
   useEffect(() => {
     const blob = renderPdf(content, profile);
-    const url = URL.createObjectURL(blob);
+    // Force application/pdf MIME (some browsers reject jsPDF's blob type in iframes)
+    const typed = new Blob([blob], { type: "application/pdf" });
+    const url = URL.createObjectURL(typed);
     setPdfUrl(url);
     return () => URL.revokeObjectURL(url);
   }, [content, profile]);
