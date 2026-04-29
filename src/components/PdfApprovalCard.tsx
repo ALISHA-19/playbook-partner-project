@@ -20,18 +20,8 @@ export function PdfApprovalCard({
   const [editing, setEditing] = useState(false);
   const [skipped, setSkipped] = useState(false);
   const [approved, setApproved] = useState(false);
-  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
   useEffect(() => setContent(initial), [initial]);
-
-  useEffect(() => {
-    const blob = renderPdf(content, profile);
-    // Force application/pdf MIME (some browsers reject jsPDF's blob type in iframes)
-    const typed = new Blob([blob], { type: "application/pdf" });
-    const url = URL.createObjectURL(typed);
-    setPdfUrl(url);
-    return () => URL.revokeObjectURL(url);
-  }, [content, profile]);
 
   const downloadPdf = () => {
     const blob = renderPdf(content, profile);
@@ -75,18 +65,7 @@ export function PdfApprovalCard({
       </div>
 
       <div className="p-5 space-y-4">
-        {pdfUrl && (
-          <div className="rounded-lg overflow-hidden border border-border bg-muted" style={{ height: 480 }}>
-            <object data={pdfUrl} type="application/pdf" className="w-full h-full">
-              <div className="flex flex-col items-center justify-center h-full p-6 text-center text-sm text-muted-foreground gap-3">
-                <p>Inline PDF preview isn't available in this browser.</p>
-                <Button variant="outline" size="sm" onClick={downloadPdf}>
-                  <Download className="h-4 w-4 mr-1.5" /> Download PDF to preview
-                </Button>
-              </div>
-            </object>
-          </div>
-        )}
+        <PdfDocumentPreview content={content} profile={profile} />
 
         {editing ? (
           <div className="space-y-3 border-t border-border pt-4">
@@ -157,6 +136,64 @@ export function PdfApprovalCard({
           </div>
         </div>
         {!approved && <p className="text-xs text-muted-foreground">Approve before sending — nothing lead-facing fires automatically.</p>}
+      </div>
+    </div>
+  );
+}
+
+function PdfDocumentPreview({ content, profile }: { content: PdfContent; profile: LeadProfile }) {
+  return (
+    <div className="rounded-lg border border-border bg-muted p-3">
+      <div className="mx-auto max-h-[520px] max-w-[560px] overflow-y-auto rounded-md bg-background shadow-elevated">
+        <div className="bg-primary px-8 py-8 text-primary-foreground">
+          <p className="text-xs font-semibold uppercase tracking-widest text-accent">SCALER</p>
+          <p className="mt-1 text-xs opacity-80">Prepared specifically for you</p>
+          <h4 className="mt-6 font-display text-2xl leading-tight">{content.cover_title}</h4>
+          <p className="mt-3 text-sm leading-relaxed opacity-85">{content.cover_subtitle}</p>
+        </div>
+
+        <div className="space-y-6 px-8 py-7 text-sm leading-relaxed text-foreground">
+          <p className="text-xs text-muted-foreground">
+            For: {profile.name}{profile.role ? ` — ${profile.role}` : ""}{profile.company ? ` @ ${profile.company}` : ""}
+          </p>
+
+          <p>{content.opening_note}</p>
+
+          <section className="space-y-4">
+            <div className="h-0.5 w-10 bg-accent" />
+            <h5 className="font-display text-xl text-primary">Your questions, answered</h5>
+            {content.questions_addressed.map((item, index) => (
+              <article key={`${item.question}-${index}`} className="space-y-1.5">
+                <p className="font-semibold">{index + 1}. {item.question}</p>
+                <p>{item.answer}</p>
+                <p className="text-xs text-muted-foreground">Why we're confident: {item.evidence}</p>
+              </article>
+            ))}
+          </section>
+
+          <section className="space-y-3">
+            <div className="h-0.5 w-10 bg-accent" />
+            <h5 className="font-display text-xl text-primary">Why Scaler — for you specifically</h5>
+            <ul className="space-y-2">
+              {content.why_scaler_for_you.map((item, index) => (
+                <li key={`${item}-${index}`} className="flex gap-3">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section className="border-l-4 border-accent bg-muted p-4">
+            <p className="font-semibold text-primary">Being honest with you</p>
+            <p className="mt-2">{content.honest_caveat}</p>
+          </section>
+
+          <section className="bg-primary p-4 text-primary-foreground">
+            <p className="text-xs font-semibold uppercase tracking-widest text-accent">Your next step</p>
+            <p className="mt-2">{content.next_step}</p>
+          </section>
+        </div>
       </div>
     </div>
   );
