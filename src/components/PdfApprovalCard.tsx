@@ -26,7 +26,9 @@ export function PdfApprovalCard({
 
   useEffect(() => {
     const blob = renderPdf(content, profile);
-    const url = URL.createObjectURL(blob);
+    // Force application/pdf MIME (some browsers reject jsPDF's blob type in iframes)
+    const typed = new Blob([blob], { type: "application/pdf" });
+    const url = URL.createObjectURL(typed);
     setPdfUrl(url);
     return () => URL.revokeObjectURL(url);
   }, [content, profile]);
@@ -75,7 +77,14 @@ export function PdfApprovalCard({
       <div className="p-5 space-y-4">
         {pdfUrl && (
           <div className="rounded-lg overflow-hidden border border-border bg-muted" style={{ height: 480 }}>
-            <iframe src={pdfUrl} className="w-full h-full" title={`PDF preview for ${profile.name}`} />
+            <object data={pdfUrl} type="application/pdf" className="w-full h-full">
+              <div className="flex flex-col items-center justify-center h-full p-6 text-center text-sm text-muted-foreground gap-3">
+                <p>Inline PDF preview isn't available in this browser.</p>
+                <Button variant="outline" size="sm" onClick={downloadPdf}>
+                  <Download className="h-4 w-4 mr-1.5" /> Download PDF to preview
+                </Button>
+              </div>
+            </object>
           </div>
         )}
 

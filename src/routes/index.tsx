@@ -16,7 +16,7 @@ export const Route = createFileRoute("/")({
   component: HomePage,
   head: () => ({
     meta: [
-      { title: "Ayuda — AI sales agent for Scaler BDAs" },
+      { title: "Scaler Sales Agent — AI briefings & trust PDFs" },
       { name: "description", content: "Pre-call BDA briefings + post-call personalised PDFs, delivered on WhatsApp. Supercharging Scaler sales conversations." },
     ],
   }),
@@ -78,7 +78,7 @@ function HomePage() {
             transition={{ duration: 0.6 }}
             className="flex items-center gap-2 text-xs uppercase tracking-widest opacity-80 mb-6"
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-accent" /> Ayuda · AI agent for Scaler sales
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" /> AI agent for Scaler sales
           </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
@@ -169,7 +169,7 @@ function HomePage() {
 
       <footer className="border-t border-border py-8">
         <div className="max-w-6xl mx-auto px-6 text-xs text-muted-foreground flex items-center justify-between flex-wrap gap-2">
-          <p>Ayuda · Built for the Scaler AI Builder take-home</p>
+          <p>Scaler Sales Agent · Built for the Scaler AI Builder take-home</p>
           <p className="flex items-center gap-1.5">Pre-sales nudge · Post-call trust PDF · Audio path · BDA approval gate <ArrowRight className="h-3 w-3" /></p>
         </div>
       </footer>
