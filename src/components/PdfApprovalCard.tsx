@@ -20,18 +20,8 @@ export function PdfApprovalCard({
   const [editing, setEditing] = useState(false);
   const [skipped, setSkipped] = useState(false);
   const [approved, setApproved] = useState(false);
-  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
   useEffect(() => setContent(initial), [initial]);
-
-  useEffect(() => {
-    const blob = renderPdf(content, profile);
-    // Force application/pdf MIME (some browsers reject jsPDF's blob type in iframes)
-    const typed = new Blob([blob], { type: "application/pdf" });
-    const url = URL.createObjectURL(typed);
-    setPdfUrl(url);
-    return () => URL.revokeObjectURL(url);
-  }, [content, profile]);
 
   const downloadPdf = () => {
     const blob = renderPdf(content, profile);
@@ -66,27 +56,22 @@ export function PdfApprovalCard({
       <div className="bg-gradient-to-br from-primary to-primary/80 p-5 text-primary-foreground">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-widest text-accent font-semibold">Lead-facing PDF · approval required</p>
+            <p className="text-xs uppercase tracking-widest text-accent font-semibold">
+              Lead-facing PDF · approval required
+            </p>
             <h3 className="font-display text-2xl mt-1">{content.cover_title}</h3>
             <p className="text-sm opacity-80 mt-1">{content.cover_subtitle}</p>
           </div>
-          {approved && <span className="inline-flex items-center gap-1 text-xs bg-accent text-accent-foreground px-2 py-1 rounded-full"><Check className="h-3 w-3" /> Approved</span>}
+          {approved && (
+            <span className="inline-flex items-center gap-1 text-xs bg-accent text-accent-foreground px-2 py-1 rounded-full">
+              <Check className="h-3 w-3" /> Approved
+            </span>
+          )}
         </div>
       </div>
 
       <div className="p-5 space-y-4">
-        {pdfUrl && (
-          <div className="rounded-lg overflow-hidden border border-border bg-muted" style={{ height: 480 }}>
-            <object data={pdfUrl} type="application/pdf" className="w-full h-full">
-              <div className="flex flex-col items-center justify-center h-full p-6 text-center text-sm text-muted-foreground gap-3">
-                <p>Inline PDF preview isn't available in this browser.</p>
-                <Button variant="outline" size="sm" onClick={downloadPdf}>
-                  <Download className="h-4 w-4 mr-1.5" /> Download PDF to preview
-                </Button>
-              </div>
-            </object>
-          </div>
-        )}
+        <PdfDocumentPreview content={content} profile={profile} />
 
         {editing ? (
           <div className="space-y-3 border-t border-border pt-4">
@@ -126,18 +111,27 @@ export function PdfApprovalCard({
                 className="mt-1.5"
               />
             </div>
-            <Button variant="secondary" size="sm" onClick={() => setEditing(false)}>Done editing</Button>
+            <Button variant="secondary" size="sm" onClick={() => setEditing(false)}>
+              Done editing
+            </Button>
           </div>
         ) : (
           <div className="border-t border-border pt-4">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold mb-1.5">WhatsApp cover message</p>
-            <p className="text-sm rounded-lg bg-muted p-3 italic">"{content.whatsapp_cover_message}"</p>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold mb-1.5">
+              WhatsApp cover message
+            </p>
+            <p className="text-sm rounded-lg bg-muted p-3 italic">
+              "{content.whatsapp_cover_message}"
+            </p>
           </div>
         )}
 
         <div className="flex flex-wrap gap-2 pt-2 border-t border-border">
           {!approved && (
-            <Button onClick={() => setApproved(true)} className="bg-accent text-accent-foreground hover:bg-accent/90">
+            <Button
+              onClick={() => setApproved(true)}
+              className="bg-accent text-accent-foreground hover:bg-accent/90"
+            >
               <Check className="h-4 w-4 mr-1.5" /> Approve
             </Button>
           )}
@@ -151,12 +145,86 @@ export function PdfApprovalCard({
             <Button variant="outline" onClick={downloadPdf}>
               <Download className="h-4 w-4 mr-1.5" /> Download
             </Button>
-            <Button disabled={!approved} onClick={sendOnWhatsApp} className="bg-primary text-primary-foreground hover:bg-primary/90">
+            <Button
+              disabled={!approved}
+              onClick={sendOnWhatsApp}
+              className="bg-primary text-primary-foreground hover:bg-primary/90"
+            >
               <Send className="h-4 w-4 mr-1.5" /> Send via WhatsApp
             </Button>
           </div>
         </div>
-        {!approved && <p className="text-xs text-muted-foreground">Approve before sending — nothing lead-facing fires automatically.</p>}
+        {!approved && (
+          <p className="text-xs text-muted-foreground">
+            Approve before sending — nothing lead-facing fires automatically.
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function PdfDocumentPreview({ content, profile }: { content: PdfContent; profile: LeadProfile }) {
+  return (
+    <div className="rounded-lg border border-border bg-muted p-3">
+      <div className="mx-auto max-h-[520px] max-w-[560px] overflow-y-auto rounded-md bg-background shadow-elevated">
+        <div className="bg-primary px-8 py-8 text-primary-foreground">
+          <p className="text-xs font-semibold uppercase tracking-widest text-accent">SCALER</p>
+          <p className="mt-1 text-xs opacity-80">Prepared specifically for you</p>
+          <h4 className="mt-6 font-display text-2xl leading-tight">{content.cover_title}</h4>
+          <p className="mt-3 text-sm leading-relaxed opacity-85">{content.cover_subtitle}</p>
+        </div>
+
+        <div className="space-y-6 px-8 py-7 text-sm leading-relaxed text-foreground">
+          <p className="text-xs text-muted-foreground">
+            For: {profile.name}
+            {profile.role ? ` — ${profile.role}` : ""}
+            {profile.company ? ` @ ${profile.company}` : ""}
+          </p>
+
+          <p>{content.opening_note}</p>
+
+          <section className="space-y-4">
+            <div className="h-0.5 w-10 bg-accent" />
+            <h5 className="font-display text-xl text-primary">Your questions, answered</h5>
+            {content.questions_addressed.map((item, index) => (
+              <article key={`${item.question}-${index}`} className="space-y-1.5">
+                <p className="font-semibold">
+                  {index + 1}. {item.question}
+                </p>
+                <p>{item.answer}</p>
+                <p className="text-xs text-muted-foreground">
+                  Why we're confident: {item.evidence}
+                </p>
+              </article>
+            ))}
+          </section>
+
+          <section className="space-y-3">
+            <div className="h-0.5 w-10 bg-accent" />
+            <h5 className="font-display text-xl text-primary">Why Scaler — for you specifically</h5>
+            <ul className="space-y-2">
+              {content.why_scaler_for_you.map((item, index) => (
+                <li key={`${item}-${index}`} className="flex gap-3">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section className="border-l-4 border-accent bg-muted p-4">
+            <p className="font-semibold text-primary">Being honest with you</p>
+            <p className="mt-2">{content.honest_caveat}</p>
+          </section>
+
+          <section className="bg-primary p-4 text-primary-foreground">
+            <p className="text-xs font-semibold uppercase tracking-widest text-accent">
+              Your next step
+            </p>
+            <p className="mt-2">{content.next_step}</p>
+          </section>
+        </div>
       </div>
     </div>
   );
