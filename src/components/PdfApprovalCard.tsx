@@ -37,9 +37,16 @@ export function PdfApprovalCard({
     if (!leadPhone) return toast.error("Set the lead's WhatsApp number first");
     downloadPdf();
     const msg = `${content.whatsapp_cover_message}\n\n(PDF attached separately)`;
-    const wa = `https://wa.me/${leadPhone.replace(/\D/g, "")}?text=${encodeURIComponent(msg)}`;
-    window.open(wa, "_blank");
-    toast.success("PDF downloaded — WhatsApp opened. Attach the PDF in chat.");
+    const phone = leadPhone.replace(/\D/g, "");
+    const wa = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+    const a = document.createElement("a");
+    a.href = wa;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    toast.success("PDF downloaded — WhatsApp opened in a new tab. Attach the PDF in chat.");
   };
 
   if (skipped) {
