@@ -38,15 +38,10 @@ export function PdfApprovalCard({
     downloadPdf();
     const msg = `${content.whatsapp_cover_message}\n\n(PDF attached separately)`;
     const phone = leadPhone.replace(/\D/g, "");
-    const wa = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
-    const a = document.createElement("a");
-    a.href = wa;
-    a.target = "_blank";
-    a.rel = "noopener noreferrer";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    toast.success("PDF downloaded — WhatsApp opened in a new tab. Attach the PDF in chat.");
+    // Use web.whatsapp.com directly — wa.me redirects via api.whatsapp.com which is blocked in iframes.
+    const wa = `https://web.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`;
+    window.open(wa, "_blank", "noopener,noreferrer");
+    toast.success("PDF downloaded — WhatsApp Web opened. Attach the PDF in chat.");
   };
 
   if (skipped) {
