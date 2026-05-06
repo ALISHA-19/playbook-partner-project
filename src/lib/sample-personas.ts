@@ -22,6 +22,7 @@ BDA: We'll cover everything you need.`,
   {
     id: "karthik",
     name: "Karthik Iyer",
+    phone: "917719849809",
     role: "Senior Software Engineer",
     company: "Google",
     yoe: "9",

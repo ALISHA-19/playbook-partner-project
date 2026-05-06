@@ -138,7 +138,7 @@ function HomePage() {
           <h2 className="font-display text-4xl">One lead in. Two outputs out.</h2>
         </div>
         <div className="rounded-3xl border border-border bg-card p-6 sm:p-8 shadow-elevated">
-          <LeadInputForm onReady={handleGenerate} busy={busy} />
+          <LeadInputForm onReady={handleGenerate} busy={busy} onLeadPhone={setLeadPhone} />
         </div>
       </section>
 

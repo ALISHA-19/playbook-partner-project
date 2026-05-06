@@ -11,16 +11,17 @@ import { toast } from "sonner";
 type Props = {
   onReady: (args: { profile: LeadProfile; transcript: string }) => void;
   busy?: boolean;
+  onLeadPhone?: (phone: string) => void;
 };
 
-export function LeadInputForm({ onReady, busy }: Props) {
+export function LeadInputForm({ onReady, busy, onLeadPhone }: Props) {
   const [mode, setMode] = useState<"structured" | "audio">("structured");
   const [profile, setProfile] = useState<LeadProfile>({ name: "" });
   const [transcript, setTranscript] = useState("");
   const [transcribing, setTranscribing] = useState(false);
 
   const loadPersona = (id: string) => {
-    const p = SAMPLE_PERSONAS.find((x) => x.id === id)!;
+    const p = SAMPLE_PERSONAS.find((x) => x.id === id)! as typeof SAMPLE_PERSONAS[number] & { phone?: string };
     setProfile({
       name: p.name,
       role: p.role,
@@ -32,6 +33,10 @@ export function LeadInputForm({ onReady, busy }: Props) {
       notes: p.notes,
     });
     setTranscript(p.transcript);
+    if (p.phone && onLeadPhone) {
+      onLeadPhone(p.phone);
+      toast.success(`Lead WhatsApp set to +${p.phone}`);
+    }
   };
 
   const handleAudio = async (file: File) => {
