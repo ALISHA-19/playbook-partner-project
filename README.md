@@ -2,6 +2,8 @@
 
 An AI sales assistant by Alisha Chaudhari, built for the **Scaler AI Builder** take-home. **One lead in, two outputs out.**
 
+**▶ Live demo: [playbook-partner-project.lovable.app](https://playbook-partner-project.lovable.app)**. Load a sample persona and click *Generate briefing + lead PDF*.
+
 ## What's inside
 - **Pre-sales nudge:** from a lead's background (LinkedIn, education, past roles) and internal notes, it writes a pre-call briefing for the sales rep (BDA) and a WhatsApp cover message.
 - **Post-call trust PDF:** from the call transcript, it pulls out the lead's real questions and builds a personalised PDF: *Your questions, answered*, *Why Scaler, for you specifically*, and a *Being honest with you* caveat.
